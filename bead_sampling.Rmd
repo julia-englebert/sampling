@@ -1,0 +1,39 @@
+---
+title: "Sampling"
+author: "Julia Englebert"
+date: "3/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readr)
+library(janitor)
+library(gt)
+library(googlesheets4)
+library(fs)
+```
+
+```{r}
+samp <- read_sheet("https://docs.google.com/spreadsheets/d/14HmwN2cEVAJHupuehCuLdwG9BXtR3COrxDgaaylLhkA/edit#gid=0") %>%
+  select(Partners, Red, White, `Percent Red`, `Percent White`) %>% filter(! is.na(Partners)) 
+
+
+reds <- samp %>%
+  summarize(mean(`Percent Red`))
+
+whites <- samp %>%
+  summarize(mean(`Percent White`))
+
+samp %>% arrange(desc(Red))
+
+```
+
+```{r}
+#table <- gt(samp) %>% tab_header(title = "Bead Sampling")
+
+ggplot(samp, aes(x = `Percent Red`)) + geom_bar(binwidth = 0.05) + theme_classic()
+```
+
